@@ -1,1 +1,1 @@
-# twitch-mass-ban
+# Mass Ban application for Twitch Chat
