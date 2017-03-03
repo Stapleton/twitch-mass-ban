@@ -3,7 +3,7 @@ This application is for banning a list of users in a text file from a twitch cha
 
 # Installation
 ## Prerequisites
-- NodeJS v6.x.x LTS - Can be downloaded from the [NodeJS Website](https://nodejs.org/en/)
+- **NodeJS v6.x.x LTS** - Can be downloaded from the [NodeJS Website](https://nodejs.org/en/)
 
 ## Instructions
 ### Global Instructions
