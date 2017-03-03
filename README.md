@@ -1,6 +1,13 @@
 # Mass Ban application for Twitch Chat
 This application is for banning a list of users in a text file from a twitch chatroom in a timely fashion.
 
+# Disclaimer
+## Needs Moderator Status in Chat!
+This app must have moderator status in the chatroom that it will be doing the banning in. Be sure to connect it to an account that is trusted enough by the broadcaster to have moderator status or already has moderator status.
+
+## Unauthorized usage by the broadcaster!
+Before using this app in someones twitch chat, please make sure that they are aware of the usage of it, that they know what it does, and that they have looked into it themselves to make sure it isnt malicious. Any issues that arise and have to do with unauthorized usage will be removed from the issue tracker! I will not tolerate improper usage then having someone come to me with a situation that was caused by improper usage! Please deal with that on your own accord!
+
 # Installation
 ## Prerequisites
 - **NodeJS v6.x.x LTS** - Can be downloaded from the [NodeJS Website](https://nodejs.org/en/)
