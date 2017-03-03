@@ -1,0 +1,11 @@
+{
+  "name": "proactive-banning-app-core",
+  "version": "1.0.0",
+  "description": "The core functions to the Proactive Ban App for Twitch chat.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

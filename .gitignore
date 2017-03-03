@@ -38,3 +38,6 @@ jspm_packages
 
 # .env environment storage
 *.env
+
+# remove cache folder
+cache
