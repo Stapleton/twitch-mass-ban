@@ -36,5 +36,5 @@ TWITCH_USERNAME=
 - Return back to the Global instructions.
 
 # Usage
-*Remove any quotes when replacing values in the below command*
+*Remove any quotes when replacing values in the below command*  
 `node index.js "username of chatroom to do banning in" "text file to pull names from (Each name must be on its own line)"`
