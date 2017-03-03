@@ -21,9 +21,6 @@ initPromise1.then(() => {
     let initPromise3 = new Promise((resolve, reject) => {
       console.log('\nStarting.');
       require('./lib/fileParsing');
-      require('./lib/twitchConnect').on('ban', (channel, user, reason) => {
-        console.log(user + ' was banned in ' + channel + 'for reason: ' + reason);
-      });
       resolve();
     });
     initPromise3.catch((error) => { console.log(error); });
