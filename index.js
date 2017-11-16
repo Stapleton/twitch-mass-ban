@@ -5,13 +5,12 @@ const _fs = require('fs');
 const globals = {
   script: process.argv[1],
   channel: process.argv[2],
-  file: process.argv[3],
-  twitch_client_id: 'p04q9em5dsuowcswv6wifxp7p9tgyb'
+  file: process.argv[3]
 }
 
 // Create option object. Contains configuration for _tmi.client()
 const options = {
-  options: { clientId: globals.twitch_client_id, debug: false },
+  options: { debug: false },
   connection: { reconnect: true, secure: true },
   identity: { username: process.env.TWITCH_USERNAME, password: process.env.TWITCH_OAUTH },
   channels: [ globals.channel ]
@@ -44,7 +43,7 @@ function doIt() {
         }).catch((error) => {
           console.log(error);
         })*/
-        client.say(channel, `/ban ${banQueue[0].toString()} "PM ${process.env.TWITCH_USERNAME} about why this user was banned. Automated with Twitch Mass Ban by OscarXcore."`)
+        client.say(channel, `/ban ${banQueue[0].toString()} "PM ${process.env.TWITCH_USERNAME} about why this user was banned. Automated with Twitch Mass Ban by OscarXcore on Github."`)
         console.log(`#${channel}: User #${banQueue.length} | ${banQueue[0].toString()} has been banned from the channel.`);
         banQueue.shift();
       } while (banQueue.length != 0);
