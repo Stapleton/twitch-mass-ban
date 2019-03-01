@@ -43,7 +43,7 @@ function doIt() {
         }).catch((error) => {
           console.log(error);
         })*/
-        client.say(channel, `/ban ${banQueue[0].toString()} "PM ${process.env.TWITCH_USERNAME} about why this user was banned. Automated with Twitch Mass Ban by OscarXcore on Github."`)
+        client.say(channel, `/ban ${banQueue[0].toString()} "PM ${process.env.TWITCH_USERNAME} about why this user was banned. Automated with Twitch Mass Ban by Stapleton on Github."`)
         console.log(`#${channel}: User #${banQueue.length} | ${banQueue[0].toString()} has been banned from the channel.`);
         banQueue.shift();
       } while (banQueue.length != 0);
