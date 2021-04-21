@@ -9,7 +9,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^4.1.0",
     "dotenv": "^4.0.0",
-    "tmi.js": "^1.1.2"
+    "signale": "^1.4.0",
+    "tmi.js": "^1.1.2",
+    "twitch-js": "^2.0.0-beta.42"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^14.6.0",
+    "@types/signale": "^1.4.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
   }
 }

@@ -38,6 +38,7 @@ jspm_packages
 
 # .env environment storage
 *.env
+auth.env
 
 # remove cache folder
 cache
