@@ -26,29 +26,70 @@ require("dotenv").config({ path: "./auth.env" });
 const signale_1 = require("signale");
 const twitch_js_1 = __importDefault(require("twitch-js"));
 const FS = __importStar(require("fs"));
+const sleep = async (waitTimeInMs) => new Promise((resolve) => setTimeout(resolve, waitTimeInMs));
 class TwitchMassBan {
     constructor() {
         this._self = this;
-        this.Logger = new signale_1.Signale({ interactive: true });
-        this.Twitch = new twitch_js_1.default(this.getOptions());
-        this.options = {
-            token: process.env.TWITCH_OAUTH,
-            username: process.env.TWITCH_USERNAME,
+        this.Logger = new signale_1.Signale({
+            interactive: false,
+            secrets: [
+                process.env.TWITCH_CLID,
+                process.env.TWITCH_TOKEN,
+                process.env.TWITCH_REFRESH,
+            ],
+        });
+        this.Counters = {
+            total: {
+                count: 0,
+                log: new signale_1.Signale({ interactive: true, scope: "Total" }),
+            },
+            channel: {
+                count: 0,
+                log: new signale_1.Signale({ interactive: true, scope: "Channels" }),
+            },
         };
+        this.options = {
+            clientId: process.env.TWITCH_CLID,
+            token: process.env.TWITCH_TOKEN,
+            username: process.env.TWITCH_USERNAME,
+            log: { destination: "./twitchjs.log" },
+        };
+        this.Twitch = new twitch_js_1.default({
+            token: this.options.token,
+            username: this.options.username,
+            clientId: this.options.clientId,
+            log: this.options.log,
+        });
         this.flags = {
             channel: "",
             list: "",
         };
-        this.readFlags().then(() => {
+        this.readFlags()
+            .then(() => {
             this.Logger.success("Read command line flags!");
             this.Logger.pending("Connecting to Twitch Chat...");
-            this.Twitch.chat.connect();
-            this.Logger.success("Connected to Twitch!");
-            this.Logger.await("Processing...");
-            this.Logger.time("ban");
-            this.process();
-            this.Logger.complete(`Done. Took ${this.Logger.timeEnd("ban")}`);
+            this.Twitch.chat.connect().then(() => {
+                this.Logger.success("Connected to Twitch!");
+                this.Logger.disable();
+                this.Logger.time("timer");
+                this.Logger.enable();
+                this.process();
+                this.Logger.disable();
+                let timer = this.Logger.timeEnd("timer");
+                this.Logger.enable();
+                this.Logger.complete(`Done. Took ${timer.span}ms`);
+                this.resetCounters();
+                this.process(true);
+                process.exit();
+            });
+        })
+            .catch((e) => {
+            this.Logger.error("Missing required flags. -c channel -l listOfUsernames");
         });
+    }
+    resetCounters() {
+        this.Counters.total.count = 0;
+        this.Counters.channel.count = 0;
     }
     getOptions() {
         return this.options;
@@ -60,8 +101,6 @@ class TwitchMassBan {
                     this.flags.channel = array[index + 1];
                 case "-l":
                     this.flags.list = array[index + 1];
-                default:
-                    this.Logger.error("Missing required flags. -c channel -l listOfUsernames");
             }
         }, this._self);
     }
@@ -78,15 +117,57 @@ class TwitchMassBan {
         return FS.readFileSync(this.getListFlag(), "utf8").split("\n");
     }
     parseChannelFlag() {
-        return this.getChannelFlag().split(",");
+        let a = this.getChannelFlag().split(",");
+        if (a[a.length - 1] == "")
+            delete a[a.length - 1];
+        return a;
     }
-    process() {
+    process(undo = false) {
         let list = this.parseListFlag();
         let channels = this.parseChannelFlag();
+        let prefix = undo ? "Unbanning..." : "Banning...";
         channels.forEach((channel) => {
             list.forEach((user) => {
-                this.Twitch.chat.ban(channel, user);
+                sleep("300").then(() => {
+                    undo
+                        ? this.Twitch.chat.unban(channel, user)
+                        : this.Twitch.chat.ban(channel, user);
+                });
+                this.Counters.total.count++;
+                this.Counters.total.log.pending(`${prefix} ${this.Counters.total.count}`);
             }, this._self);
+            this.Counters.channel.count++;
+            this.Counters.channel.log.pending(`${prefix} ${this.Counters.channel.count}`);
         }, this._self);
     }
 }
+new TwitchMassBan();
+/* Compilation Errors
+node_modules/twitch-js/types/index.d.ts:1541:26 - error TS2304: Cannot find name 'RequestInit'.
+
+1541 type FetchOptions = Omit<RequestInit, "headers"> & SearchOption & HeaderOption;
+                              ~~~~~~~~~~~
+
+node_modules/twitch-js/types/index.d.ts:1634:84 - error TS2304: Cannot find name 'Response'.
+
+1634     initialize(newOptions?: Partial<ApiOptions>): Promise<void | ApiRootResponse | Response>;
+                                                                                        ~~~~~~~~
+
+node_modules/twitch-js/types/index.d.ts:1660:73 - error TS2304: Cannot find name 'Response'.
+
+1660     get<T = any>(endpoint?: string, options?: ApiFetchOptions): Promise<Response | T>;
+                                                                             ~~~~~~~~
+
+node_modules/twitch-js/types/index.d.ts:1664:73 - error TS2304: Cannot find name 'Response'.
+
+1664     post<T = any>(endpoint: string, options?: ApiFetchOptions): Promise<Response | T>;
+                                                                             ~~~~~~~~
+
+node_modules/twitch-js/types/index.d.ts:1668:72 - error TS2304: Cannot find name 'Response'.
+
+1668     put<T = any>(endpoint: string, options?: ApiFetchOptions): Promise<Response | T>;
+                                                                            ~~~~~~~~
+
+
+Found 5 errors.
+*/
