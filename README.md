@@ -1,3 +1,6 @@
+# Project has been moved to my personal Gitlab
+https://git.stapleton.pw/stapleton/tmbt
+
 # Mass Ban application for Twitch Chat
 This application is for banning a list of users in a text file from a twitch chatroom in a timely fashion.
 
